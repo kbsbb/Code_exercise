@@ -86,6 +86,9 @@ public:
     //d1 + 10
     //因为返回的是局部变量，函数调用完会销毁，所以返回值不能是引用
     Date operator+(int d) {
+        if (d < 0) {
+            return *this - (-d);
+        }
         Date ret(*this);
         ret._day += d;
         while (ret._day > GetMonthDay(ret._year, ret._month)) {
@@ -101,6 +104,9 @@ public:
 
     //d1 += 10
     Date& operator+=(int d) {
+        if (d < 0) {
+            return *this -= -d;
+        }
         _day += d;
         while (_day > GetMonthDay(_year, _month)) {
             _day -= GetMonthDay(_year, _month);
@@ -113,7 +119,59 @@ public:
         return *this;
     }
 
-    //
+    //d1 - 10
+    Date operator-(int d) {
+        Date ret(*this);
+        //复用operator-=
+        ret -= d;
+        return ret;
+    }
+
+    //d1 -= 10
+    Date& operator-=(int d) {
+        if (d < 0) {
+            return *this += -d;
+        }
+        _day -= d;
+        while (_day < 1) {
+            _month--;
+            if (_month == 0) {
+                _month = 12;
+                _year--;
+            }
+            _day += GetMonthDay(_year, _month);
+        }
+        return *this;
+    }
+
+    //++d1=> d1.operator++(&d1)
+    Date& operator++() {
+        *this += 1;
+        return *this;	//返回加之后的值
+    }
+
+    //d1++=> d1.operator++(&d1, 0)
+    //C++ 语言规定，后置自增运算符++的重载函数必须接受一个int类型
+    //的参数，这是为了区分前置自增和后置自增。这个int参数在实际调用
+    //后置自增运算符时并不传递实际的值，它只是作为一个占位符
+    Date operator++(int) {	//为了构成重载
+        Date temp(*this);
+        *this += 1;
+        return temp;	//返回加之前的值
+    }
+
+    //--d1
+    Date& operator--() {
+        *this -= 1;
+        return *this;
+    }
+
+    //d1--
+    Date operator--(int) {
+        Date temp(*this);
+        *this -= 1;
+        return temp;
+    }
 
     //------------------------------------------------------------------------
     //打印日期，如果日期非法，打印失败
@@ -144,28 +202,41 @@ int main() {
 
     Date d4(2025, 2, 28);
 
-
     //d1.Print();
     //d3.Print();
-    d2.Print();
-    d4.Print();
+    /*d2.Print();
+    d4.Print();*/
 
     //测试运算符重载
-    cout << (d2 < d4) << endl;
+    /*cout << (d2 < d4)<<endl;
     cout << (d2 == d3) << endl;
     cout << (d2 <= d4) << endl;
     cout << (d2 > d4) << endl;
     cout << (d2 >= d4) << endl;
-    cout << (d2 != d4) << endl;
+    cout << (d2 != d4) << endl;*/
 
-    //测试+和+=运算符
+    //测试+/+=/-/-=运算符
     d2.Print();
-    Date d5 = d2 + 1000;
+    Date d5 = d2;
     d5.Print();
-
-    d2.Print();
+    cout << "------------------------" << endl;
+    //测试+/+=
+    /*d2.Print();
     d2 += 100;
+    d2.Print();*/
+    //测试-/-=
+    d5 = d2 - 11;
     d2.Print();
+    d5.Print();
+    d2 -= 10;
+    d2.Print();
+    cout << "------------------------" << endl;
+    //测试++/--运算符
+    d2.Print();
+
+    d2--.Print();
+    (--d2).Print();
+
 
     return 0;
 }
