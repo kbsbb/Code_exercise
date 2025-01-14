@@ -1,7 +1,7 @@
 //题目：日期差值
 //链接：https://www.nowcoder.com/practice/ccb7383c76fc48d2bbc27a2a6319631c?tpId=62&&tqId=29468&rp=1&ru=/activity/oj&qru=/ta/sju-kaoyan/question-ranking
 //描述：有两个日期，求两个日期之间的天数，如果两个日期是连续的我们规定他们之间的天数为两天
-//注释：
+//注释：注意多组输入的scanf要写!=EOF，否则会死循环,EOF是-1不是0
 //思路：就是日期类的两个日期相减的方法，可以不用类实现
 //总结：
 
